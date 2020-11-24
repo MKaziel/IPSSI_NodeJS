@@ -1,11 +1,7 @@
 version: '3.6'
 services:
   node:
-<<<<<<< HEAD
-    container_name: project_api_node
-=======
     container_name: api_node
->>>>>>> 5-comments
     image: 'node:latest'
     working_dir: /home/node/app
     command:
@@ -21,11 +17,7 @@ services:
     networks:
       - my-network
   mongo:
-<<<<<<< HEAD
-    container_name: project_api_mongo
-=======
     container_name: api_mongo
->>>>>>> 5-comments
     image: mongo
     ports:
       - "27017:27017"

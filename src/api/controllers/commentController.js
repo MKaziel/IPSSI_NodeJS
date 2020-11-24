@@ -1,90 +1,140 @@
-const Comment = require('../models/commentModel');
+const Comment = require("../models/commentModel");
 
-exports.list_all_comments = (req, res) =>{
-    let postId =  req.params.post_id;
-    Comment.find({'post_id': postId},(error,comments)=>{
+exports.list_all_comments = (req, res) => {
+    let postId = req.params.post_id;
+    Comment.find({ post_id: postId }, (error, comments) => {
         if (error) {
             res.status(500);
             console.log(error);
             res.json({
-                message: "Erreur serveur."
-            })
+                message: "Erreur serveur.",
+            });
         } else {
             res.status(200);
             console.log(comments);
             res.json(comments);
         }
-    })
-}
-
-exports.create_a_comment = (req, res) =>{
-    let elements = req.body; elements['post_id'] = req.params.post_id;
-    let new_comment = new Comment(elements);
-    // let new_comment = new Comment({...req.params.post_id, 'post_id': req.params.postId});
-
-    new_comment.save((error, comment) => {
-        if (error) {
-            res.status(500);
-            console.log(error);
-            res.json({
-                message: "Erreur serveur."
-            });
-        } else {
-            res.status(201);
-            res.json(comment);
-        }
     });
-}
+};
 
-exports.get_a_comment = (req,res) => {
-    Comment.findById(req.params.comment_id, (error,comment) => {
+exports.create_a_comment = (req, res) => {
+    // let elements = req.body; elements['post_id'] = req.params.post_id;
+    // let new_comment = new Comment(elements);
+    let http = require("https");
+    let url = "https://loripsum.net/api/plaintext";
+    let body = req.body;
+
+    if (
+        typeof body.message === "undefined" ||
+        body.message === null ||
+        body.message === ""
+    ) {
+        var request = http.get(url, function (response) {
+            var buffer = "",
+                data;
+
+            response.on("data", function (chunk) {
+                buffer += chunk;
+            });
+
+            response.on("end", function (err) {
+                console.log(buffer);
+                console.log("\n");
+                data = buffer;
+
+                let new_comment = new Comment({
+                    ...req.body,
+                    message: data,
+                    post_id: req.params.postId,
+                });
+                new_comment.save((error, comment) => {
+                    if (error) {
+                        res.status(500);
+                        console.log(error);
+                        res.json({
+                            message: "Erreur serveur.",
+                        });
+                    } else {
+                        res.status(201);
+                        res.json(comment);
+                    }
+                });
+            });
+        });
+    } else {
+        let new_comment = new Comment({
+            ...req.body,
+            post_id: req.params.postId,
+        });
+        new_comment.save((error, comment) => {
+            if (error) {
+                res.status(500);
+                console.log(error);
+                res.json({
+                    message: "Erreur serveur.",
+                });
+            } else {
+                res.status(201);
+                res.json(comment);
+            }
+        });
+    }
+};
+
+exports.get_a_comment = (req, res) => {
+    Comment.findById(req.params.comment_id, (error, comment) => {
         if (error) {
             res.status(500);
             console.log(error);
             res.json({
-                message: "Erreur serveur."
-            })
+                message: "Erreur serveur.",
+            });
         } else {
             res.status(200);
             console.log(comment);
             res.json({
                 message: "Comment find !",
-                object : comment
+                object: comment,
             });
         }
-    })
-}
+    });
+};
 
-exports.update_a_comment = (req,res) => {
-    Comment.findByIdAndUpdate(req.params.comment_id,req.body,{new:true},(error,comment) => {
-        if (error) {
-            res.status(500);
-            console.log(error);
-            res.json({
-                message: "Erreur serveur."
-            })
-        } else {
-            res.status(200);
-            console.log(comment);
-            res.json({
-                message: "Comment modified !",
-                object : comment
-            });
+exports.update_a_comment = (req, res) => {
+    Comment.findByIdAndUpdate(
+        req.params.comment_id,
+        req.body,
+        { new: true },
+        (error, comment) => {
+            if (error) {
+                res.status(500);
+                console.log(error);
+                res.json({
+                    message: "Erreur serveur.",
+                });
+            } else {
+                res.status(200);
+                console.log(comment);
+                res.json({
+                    message: "Comment modified !",
+                    object: comment,
+                });
+            }
         }
-    })
-}
+    );
+};
 
-exports.delete_a_comment = (req,res) => {
+exports.delete_a_comment = (req, res) => {
     Comment.findByIdAndRemove(req.params.comment_id, (error) => {
         if (error) {
             res.status(500);
             console.log(error);
             res.json({
-                message: "Erreur serveur."
-            })
+                message: "Erreur serveur.",
+            });
         } else {
             res.status(200);
-            res.json({message: "Comment deleted !"});
+            res.json({ message: "Comment deleted !" });
         }
-    })
-}
+    });
+};
