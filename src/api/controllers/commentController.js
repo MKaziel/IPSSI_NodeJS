@@ -20,32 +20,24 @@ exports.list_all_comments = (req, res) => {
 exports.create_a_comment = (req, res) => {
     // let elements = req.body; elements['post_id'] = req.params.post_id;
     // let new_comment = new Comment(elements);
-    let http = require("https");
     let url = "https://loripsum.net/api/plaintext";
     let body = req.body;
+    const axios = require("axios");
 
     if (
         typeof body.message === "undefined" ||
         body.message === null ||
         body.message === ""
     ) {
-        var request = http.get(url, function (response) {
-            var buffer = "",
-                data;
-
-            response.on("data", function (chunk) {
-                buffer += chunk;
-            });
-
-            response.on("end", function (err) {
-                console.log(buffer);
-                console.log("\n");
-                data = buffer;
+        axios.get(url).then(function (response) {
+            if (response.status == 200) {
+                console.log("\n MESSAGE \n");
+                console.log(response.data);
 
                 let new_comment = new Comment({
                     ...req.body,
-                    message: data,
-                    post_id: req.params.postId,
+                    message: response.data,
+                    post_id: req.params.post_id,
                 });
                 new_comment.save((error, comment) => {
                     if (error) {
@@ -59,7 +51,9 @@ exports.create_a_comment = (req, res) => {
                         res.json(comment);
                     }
                 });
-            });
+            }
+        }).catch(function(response){
+
         });
     } else {
         let new_comment = new Comment({
