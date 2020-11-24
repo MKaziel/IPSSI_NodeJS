@@ -10,6 +10,9 @@ let commentSchema = new Schema({
         type: String,
         required: "Le message est requis"
     },
+    created_by: {
+        type: String,
+    },
     created_at: {
         type: Date,
         default: Date.now
