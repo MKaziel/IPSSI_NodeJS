@@ -47,9 +47,11 @@ exports.get_a_post = (req, res) => {
         }
     })
 }
-
 exports.update_a_post = (req, res) => {
-    Post.findByIdAndUpdate(req.params.post_id, req.body, {new: true}, (error, post) => {
+    let id = req.params.post_id;
+    let element = new Post(req.body);
+
+    element.update({_id: id},element,(error,posts) => {
         if (error) {
             res.status(500);
             console.log(error);
@@ -58,7 +60,7 @@ exports.update_a_post = (req, res) => {
             })
         } else {
             res.status(200);
-            res.json(post)
+            res.json(posts);
         }
     })
 }
