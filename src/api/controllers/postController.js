@@ -47,17 +47,9 @@ exports.get_a_post = (req, res) => {
         }
     })
 }
-<<<<<<< HEAD
 
 exports.update_a_post = (req, res) => {
     Post.findByIdAndUpdate(req.params.post_id, req.body, {new: true}, (error, post) => {
-=======
-exports.update_a_post = (req, res) => {
-    let id = req.params.post_id;
-    let element = new Post(req.body);
-
-    element.update({_id: id},element,(error,posts) => {
->>>>>>> 5-comments
         if (error) {
             res.status(500);
             console.log(error);
@@ -66,11 +58,7 @@ exports.update_a_post = (req, res) => {
             })
         } else {
             res.status(200);
-<<<<<<< HEAD
             res.json(post)
-=======
-            res.json(posts);
->>>>>>> 5-comments
         }
     })
 }
