@@ -19,8 +19,8 @@ exports.list_all_comments = (req, res) =>{
 
 exports.create_a_comment = (req, res) =>{
     let elements = req.body; elements['post_id'] = req.params.post_id;
-    
     let new_comment = new Comment(elements);
+    // let new_comment = new Comment({...req.params.post_id, 'post_id': req.params.postId});
 
     new_comment.save((error, comment) => {
         if (error) {
