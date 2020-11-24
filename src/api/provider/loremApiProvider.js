@@ -2,7 +2,7 @@ const axios = require("axios");
 
 const baseUrl = "https://loripsum.net/api";
 
-exports.getRdmText = () => {
+exports.getRdmText = (res) => {
     return axios
         .get(baseUrl + "/plaintext", { response: "text" })
         .then(function (response) {
