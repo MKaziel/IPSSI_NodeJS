@@ -53,7 +53,11 @@ exports.create_a_comment = (req, res) => {
                 });
             }
         }).catch(function(response){
-
+            res.status(400);
+            console.log(response);
+            res.json({
+                message : "Bad request : Impossible to acces to url given in parameter",
+            });
         });
     } else {
         let new_comment = new Comment({
